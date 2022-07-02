@@ -2,6 +2,8 @@
 
 Arm::Arm(std::vector<float> lengths){
 
+	this -> lengths = lengths;
+
 	b2Vec2 gravity(0.0f, -9.8f);
 	world = new b2World(gravity);
 
@@ -22,10 +24,12 @@ Arm::Arm(std::vector<float> lengths){
 
 	baseBody -> CreateFixture(&baseFix);
 
-	float height = 1;
+	float height = 0;
 	float prev_l = 0;
 
 	b2Body* prev = baseBody;
+
+	int i = 0;
 
 	for(float l : lengths){
 		b2BodyDef beamBodyDef;
@@ -47,8 +51,8 @@ Arm::Arm(std::vector<float> lengths){
 		revoluteJointDef.bodyA = prev;
 		revoluteJointDef.bodyB = beamBody;
 
-		revoluteJointDef.localAnchorA.Set(prev_l/2 - 0.02f, 0.0f);
-		revoluteJointDef.localAnchorB.Set(-l + 0.02f, 0.0f);
+		revoluteJointDef.localAnchorA.Set(prev_l/2, 0.0f);
+		revoluteJointDef.localAnchorB.Set(-l/2, 0.0f);
 
 		revoluteJointDef.collideConnected = false;
 
@@ -56,6 +60,9 @@ Arm::Arm(std::vector<float> lengths){
 
 		prev = beamBody;
 		height += l;
+		prev_l = l;
+
+		i++;
 
 	}
 
@@ -70,7 +77,7 @@ void Arm::physics(float delta, bool debug){
 		printf("Physics step (Delta: %.2f s)\n", delta);
 		b2Body* body = world -> GetBodyList();
 		while(body != nullptr){
-			printf("%6.2fm %6.2fm    %8.1fdeg\n", body->GetPosition().x, body->GetPosition().y, body->GetAngle()*DEG2RAD);
+			printf("%6.2fm %6.2fm    %8.1fdeg\n", body->GetPosition().x, body->GetPosition().y, body->GetAngle()*RAD2DEG);
 			body = body -> GetNext();
 		}
 	}
@@ -79,4 +86,46 @@ void Arm::physics(float delta, bool debug){
 
 Arm::~Arm(){
 	delete world;
+}
+
+void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+
+	sf::RectangleShape square;
+
+	int i = 0;
+
+	b2Body* body = world -> GetBodyList();
+	while(body != nullptr){
+
+		float x = body->GetPosition().x;
+		float y = body->GetPosition().y;
+
+		float ang = body->GetAngle();
+
+
+		float length;
+		if(i == lengths.size()){
+			square.setSize(sf::Vector2f(0.3, 0.3));
+			square.setOrigin(0.3 / 2, 0.3 / 2);
+
+			square.setFillColor(sf::Color(50, 50, 50));
+
+		}else{
+			length = lengths[i];
+			square.setSize(sf::Vector2f(length, 0.1));
+			square.setOrigin(length / 2, 0.1 / 2);
+
+			square.setFillColor(sf::Color(100, 100, 100));
+
+		}
+
+		square.setPosition(x, -y);
+		square.setRotation(-ang*RAD2DEG);
+
+		target.draw(square, states.transform*getTransform());
+
+		body = body -> GetNext();
+		i++;
+	}
+
 }

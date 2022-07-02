@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include <vector>
 
-#define DEG2RAD 57.325
+#include <SFML/Graphics.hpp>
 
-class Arm {
+#define RAD2DEG 57.325
+
+class Arm : public sf::Drawable, public sf::Transformable {
 
 public:
 	b2World* world;
@@ -19,4 +21,7 @@ public:
 
 	void physics(float delta, bool debug = false);
 
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+private:
+	std::vector<float> lengths;
 };
