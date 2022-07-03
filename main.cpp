@@ -8,8 +8,8 @@ void render(Arm a, float time);
 int main(){
 
 	vector<float> sizes = {1, 1, 1};
-	Arm a(sizes);
-
+	Arm a(sizes, 5);
+	
 	render(a, 20);
 
 }
@@ -43,13 +43,16 @@ void render(Arm a, float time){
 		passed+=delta.asSeconds();
 		if(passed >= time){
 			window.close();
+			return;
 		}
 
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed){
 				window.close();
+				return;
+			}
 		}
 
 	}

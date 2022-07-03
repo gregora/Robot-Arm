@@ -1,6 +1,6 @@
 #include "../include/arm.h"
 
-Arm::Arm(std::vector<float> lengths){
+Arm::Arm(std::vector<float> lengths, float max_torque){
 
 	this -> lengths = lengths;
 
@@ -34,13 +34,13 @@ Arm::Arm(std::vector<float> lengths){
 	for(float l : lengths){
 		b2BodyDef beamBodyDef;
 		beamBodyDef.type = b2_dynamicBody;
-		beamBodyDef.position.Set(height + l/2, 0.0f);
+		beamBodyDef.position.Set(0.0f, height + l/2);
 
 		b2Body* beamBody = world -> CreateBody(&beamBodyDef);
 
 
 		b2PolygonShape beam;
-		beam.SetAsBox(l/2, 0.05f);
+		beam.SetAsBox(0.05f, l/2);
 
 		b2FixtureDef beamFix;
 		beamFix.shape = &beam;
@@ -51,10 +51,13 @@ Arm::Arm(std::vector<float> lengths){
 		revoluteJointDef.bodyA = prev;
 		revoluteJointDef.bodyB = beamBody;
 
-		revoluteJointDef.localAnchorA.Set(prev_l/2, 0.0f);
-		revoluteJointDef.localAnchorB.Set(-l/2, 0.0f);
+		revoluteJointDef.localAnchorA.Set(0.0f, prev_l/2);
+		revoluteJointDef.localAnchorB.Set(0.0f, -l/2);
 
 		revoluteJointDef.collideConnected = false;
+
+		revoluteJointDef.enableMotor = true;
+		revoluteJointDef.maxMotorTorque = max_torque;
 
 		b2RevoluteJoint* joint = (b2RevoluteJoint*)world->CreateJoint( &revoluteJointDef );
 
@@ -88,6 +91,34 @@ Arm::~Arm(){
 	delete world;
 }
 
+void Arm::applySpeeds(std::vector<float> speeds){
+	b2RevoluteJoint* joint = (b2RevoluteJoint*) world -> GetJointList();
+
+	int i = speeds.size() - 1;
+
+	while(joint != nullptr){
+
+		joint -> SetMotorSpeed(speeds[i]);
+
+		i--;
+		joint = (b2RevoluteJoint*) joint -> GetNext();
+	}
+}
+
+void Arm::getAngles(float* angles){
+	b2RevoluteJoint* joint = (b2RevoluteJoint*) world -> GetJointList();
+
+	int i = lengths.size() - 1;
+
+	while(joint != nullptr){
+
+		angles[i] = joint -> GetJointAngle();
+
+		i--;
+		joint = (b2RevoluteJoint*) joint -> GetNext();
+	}
+}
+
 void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 	sf::RectangleShape square;
@@ -112,8 +143,8 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 		}else{
 			length = lengths[lengths.size() - i - 1];
-			square.setSize(sf::Vector2f(length, 0.1));
-			square.setOrigin(length / 2, 0.1 / 2);
+			square.setSize(sf::Vector2f(0.1, length));
+			square.setOrigin(0.1 / 2, length / 2);
 
 			square.setFillColor(sf::Color(100, 100, 100));
 

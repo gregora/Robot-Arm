@@ -10,11 +10,10 @@ class Arm : public sf::Drawable, public sf::Transformable {
 
 public:
 	b2World* world;
-	float max_torque;
-	Arm(std::vector<float> lengths);
+	Arm(std::vector<float> lengths, float max_torque = 1);
 	~Arm();
 
-	void applySpeeds(float* speeds);
+	void applySpeeds(std::vector<float> speeds);
 	void applySpeed(uint index, float speed);
 	void getAngles(float* angles);
 	float getAngle(uint index);
