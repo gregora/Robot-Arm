@@ -18,6 +18,8 @@ public:
 	void getAngles(float* angles);
 	float getAngle(uint index);
 
+	b2Vec2 getArmLocation();
+
 	void physics(float delta, bool debug = false);
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;

@@ -1,5 +1,6 @@
 #include "include/arm.h"
 #include <stdio.h>
+#include <iostream>
 
 using namespace std;
 
@@ -9,7 +10,7 @@ int main(){
 
 	vector<float> sizes = {1, 1, 1};
 	Arm a(sizes, 5);
-	
+
 	render(a, 20);
 
 }

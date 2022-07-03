@@ -59,7 +59,7 @@ Arm::Arm(std::vector<float> lengths, float max_torque){
 		revoluteJointDef.enableMotor = true;
 		revoluteJointDef.maxMotorTorque = max_torque;
 
-		b2RevoluteJoint* joint = (b2RevoluteJoint*)world->CreateJoint( &revoluteJointDef );
+		(b2RevoluteJoint*)world->CreateJoint( &revoluteJointDef );
 
 		prev = beamBody;
 		height += l;
@@ -117,6 +117,18 @@ void Arm::getAngles(float* angles){
 		i--;
 		joint = (b2RevoluteJoint*) joint -> GetNext();
 	}
+}
+
+b2Vec2 Arm::getArmLocation(){
+	b2Body* arm = world -> GetBodyList();
+
+	b2Vec2 position = arm -> GetPosition();
+	float angle = arm -> GetAngle();
+
+	uint last = lengths.size() - 1;
+	float length = lengths[last] / 2;
+
+	return b2Vec2(position.x + cos(angle + 3.14/2)*length, position.y + sin(angle + 3.14/2)*length);
 }
 
 void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
