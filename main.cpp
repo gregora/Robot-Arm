@@ -11,6 +11,8 @@ int main(){
 	vector<float> sizes = {1, 1, 1};
 	Arm a(sizes, 5);
 
+	a.applySpeeds({2,0.3,-0.2});
+
 	render(a, 20);
 
 }
