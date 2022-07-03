@@ -15,7 +15,7 @@ Arm::Arm(std::vector<float> lengths){
 	b2Body* baseBody = world -> CreateBody(&bodyDef);
 
 	b2PolygonShape base;
-	base.SetAsBox(0.10f, 0.10f);
+	base.SetAsBox(0.05f, 0.05f);
 
 	b2FixtureDef baseFix;
 	baseFix.shape = &base;
@@ -40,7 +40,7 @@ Arm::Arm(std::vector<float> lengths){
 
 
 		b2PolygonShape beam;
-		beam.SetAsBox(l, 0.10f);
+		beam.SetAsBox(l/2, 0.05f);
 
 		b2FixtureDef beamFix;
 		beamFix.shape = &beam;
@@ -56,7 +56,7 @@ Arm::Arm(std::vector<float> lengths){
 
 		revoluteJointDef.collideConnected = false;
 
-		world->CreateJoint( &revoluteJointDef );
+		b2RevoluteJoint* joint = (b2RevoluteJoint*)world->CreateJoint( &revoluteJointDef );
 
 		prev = beamBody;
 		height += l;
@@ -111,7 +111,7 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 			square.setFillColor(sf::Color(50, 50, 50));
 
 		}else{
-			length = lengths[i];
+			length = lengths[lengths.size() - i - 1];
 			square.setSize(sf::Vector2f(length, 0.1));
 			square.setOrigin(length / 2, 0.1 / 2);
 
