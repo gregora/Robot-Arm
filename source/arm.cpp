@@ -45,7 +45,10 @@ Arm::Arm(std::vector<float> lengths, float max_torque){
 		b2FixtureDef beamFix;
 		beamFix.shape = &beam;
 		beamFix.density = 1.0f;
+		beamFix.friction = 1.0f;
+
 		beamBody -> CreateFixture(&beamFix);
+
 
 		b2RevoluteJointDef revoluteJointDef;
 		revoluteJointDef.bodyA = prev;
@@ -66,6 +69,7 @@ Arm::Arm(std::vector<float> lengths, float max_torque){
 		prev_l = l;
 
 		i++;
+
 
 	}
 
