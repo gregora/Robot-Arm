@@ -138,6 +138,10 @@ b2Vec2 Arm::getArmLocation(){
 void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 	sf::RectangleShape square;
+	sf::CircleShape circle;
+	circle.setFillColor(sf::Color(100, 100, 100));
+	circle.setRadius(0.1 / 2);
+	circle.setOrigin(0.1 / 2, 0.1 / 2);
 
 	int i = 0;
 
@@ -164,10 +168,13 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 			square.setFillColor(sf::Color(100, 100, 100));
 
+			circle.setPosition(x + cos(ang + 3.14/2)*length/2, -(y + sin(ang + 3.14/2)*length/2));
+			target.draw(circle, states.transform*getTransform());
 		}
 
 		square.setPosition(x, -y);
 		square.setRotation(-ang*RAD2DEG);
+
 
 		target.draw(square, states.transform*getTransform());
 

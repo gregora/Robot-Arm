@@ -35,7 +35,7 @@ void render(Arm a, float time){
 		window.clear(sf::Color::Black);
 
 		sf::Time delta = clock.restart();
-		a.physics(delta.asSeconds(), true);
+		a.physics(delta.asSeconds(), false);
 
 		window.draw(a);
 
