@@ -139,7 +139,7 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 	sf::RectangleShape square;
 	sf::CircleShape circle;
-	circle.setFillColor(sf::Color(100, 100, 100));
+	circle.setFillColor(sf::Color(80, 80, 80));
 	circle.setRadius(0.1 / 2);
 	circle.setOrigin(0.1 / 2, 0.1 / 2);
 
@@ -156,8 +156,8 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 		float length;
 		if(i == lengths.size()){
-			square.setSize(sf::Vector2f(0.3, 0.3));
-			square.setOrigin(0.3 / 2, 0.3 / 2);
+			square.setSize(sf::Vector2f(0.1, 0.1));
+			square.setOrigin(0.1 / 2, 0.1 / 2);
 
 			square.setFillColor(sf::Color(50, 50, 50));
 
@@ -169,17 +169,43 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 			square.setFillColor(sf::Color(100, 100, 100));
 
 			circle.setPosition(x + cos(ang + 3.14/2)*length/2, -(y + sin(ang + 3.14/2)*length/2));
-			target.draw(circle, states.transform*getTransform());
 		}
 
 		square.setPosition(x, -y);
 		square.setRotation(-ang*RAD2DEG);
-
 
 		target.draw(square, states.transform*getTransform());
 
 		body = body -> GetNext();
 		i++;
 	}
+
+	i=0;
+	body = world -> GetBodyList();
+	while(body != nullptr){
+
+		float x = body->GetPosition().x;
+		float y = body->GetPosition().y;
+		float ang = body->GetAngle();
+
+		float length;
+		if(i == lengths.size()){
+
+		}else{
+			length = lengths[lengths.size() - i - 1];
+			circle.setPosition(x + cos(ang + 3.14/2)*length/2, -(y + sin(ang + 3.14/2)*length/2));
+			target.draw(circle, states.transform*getTransform());
+		}
+		body = body -> GetNext();
+		i++;
+	}
+
+	square.setSize(sf::Vector2f(0.3, 0.3));
+	square.setOrigin(0.3 / 2, 0.3 / 2);
+
+	square.setFillColor(sf::Color(50, 50, 50));
+
+	target.draw(square, states.transform*getTransform());
+
 
 }

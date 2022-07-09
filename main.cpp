@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void render(Arm a, float time);
+void render(Arm a);
 
 int main(){
 
@@ -13,11 +13,11 @@ int main(){
 
 	a.applySpeeds({2,0.3,-0.2});
 
-	render(a, 20);
+	render(a);
 
 }
 
-void render(Arm a, float time){
+void render(Arm a){
 
 	int WIDTH = 800;
 	int HEIGHT = 600;
@@ -44,10 +44,6 @@ void render(Arm a, float time){
 
 
 		passed+=delta.asSeconds();
-		if(passed >= time){
-			window.close();
-			return;
-		}
 
 		sf::Event event;
 		while (window.pollEvent(event))
