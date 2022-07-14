@@ -32,6 +32,8 @@ void render(Arm a){
 	int WIDTH = 800;
 	int HEIGHT = 600;
 
+	bool RECORD = false;
+
 
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Arm");
 	sf::View view(sf::Vector2f(0, 0), sf::Vector2f(WIDTH / 2, HEIGHT / 2));
@@ -43,9 +45,10 @@ void render(Arm a){
 
 	float tx = 1;
 	float ty = 1;
-
+	int frame = 0;
 	while (window.isOpen())
 	{
+		frame ++;
 		window.clear(sf::Color::Black);
 
 		sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
@@ -114,8 +117,11 @@ void render(Arm a){
 		a.applySpeeds({a1, a2, a3});
 
 		sf::Time delta = clock.restart();
-		a.physics(delta.asSeconds(), false);
-		//a.physics(1.0f/30, false);
+		float d = delta.asSeconds();
+		if(RECORD){
+			d = 1.0f/60;
+		}
+		a.physics(d, false);
 
 		sf::RectangleShape dir;
 		dir.setSize(sf::Vector2f(0.2, 0.02));
@@ -137,14 +143,20 @@ void render(Arm a){
 		// end the current frame
 		window.display();
 
+		if(RECORD){
+			window.capture().saveToFile("render/" + to_string(frame) + ".png");
+		}
 
-		passed+=delta.asSeconds();
+		passed+=d;
 
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed){
 				window.close();
+				if(RECORD){
+					system("cd render/ && ./render.sh");
+				}
 				return;
 			}
 		}
