@@ -22,7 +22,14 @@ public:
 
 	void physics(float delta, bool debug = false);
 
+	uint8 opacity = 255;
+
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	bool draw_arrow = false;
+
 private:
 	std::vector<float> lengths;
 };
+
+
+float vector2angle(float x, float y);

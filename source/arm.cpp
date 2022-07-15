@@ -139,7 +139,7 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 	sf::RectangleShape square;
 	sf::CircleShape circle;
-	circle.setFillColor(sf::Color(80, 80, 80));
+	circle.setFillColor(sf::Color(80, 80, 80, opacity));
 	circle.setRadius(0.1 / 2);
 	circle.setOrigin(0.1 / 2, 0.1 / 2);
 
@@ -159,14 +159,14 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 			square.setSize(sf::Vector2f(0.1, 0.1));
 			square.setOrigin(0.1 / 2, 0.1 / 2);
 
-			square.setFillColor(sf::Color(50, 50, 50));
+			square.setFillColor(sf::Color(50, 50, 50, opacity));
 
 		}else{
 			length = lengths[lengths.size() - i - 1];
 			square.setSize(sf::Vector2f(0.1, length));
 			square.setOrigin(0.1 / 2, length / 2);
 
-			square.setFillColor(sf::Color(100, 100, 100));
+			square.setFillColor(sf::Color(100, 100, 100, opacity));
 
 			circle.setPosition(x + cos(ang + 3.14/2)*length/2, -(y + sin(ang + 3.14/2)*length/2));
 		}
@@ -203,9 +203,22 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	square.setSize(sf::Vector2f(0.3, 0.3));
 	square.setOrigin(0.3 / 2, 0.3 / 2);
 
-	square.setFillColor(sf::Color(50, 50, 50));
+	square.setFillColor(sf::Color(50, 50, 50, opacity));
 
 	target.draw(square, states.transform*getTransform());
 
+}
 
+
+float vector2angle(float x, float y){
+
+	float pi = 3.14159265359;
+
+	float veclen = sqrt(pow(x, 2) + pow(y, 2));
+
+	if(y > 0){
+		return acos(x / veclen);
+	}else{
+		return 2*pi - acos(x / veclen);
+	}
 }

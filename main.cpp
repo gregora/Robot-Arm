@@ -21,8 +21,6 @@ int main(){
 	vector<float> sizes = {1, 1, 1};
 	Arm a(sizes, 5);
 
-	a.applySpeeds({2,0.3,-0.2});
-
 	render(a);
 
 }
@@ -67,15 +65,10 @@ void render(Arm a){
 
 		float dx = (tx - a.getArmLocation().x);
 		float dy = (ty - a.getArmLocation().y);
-		float dlen = sqrt(pow(dx, 2) + pow(dy, 2));
-
-		dx = dx / dlen;
-		dy = dy / dlen;
 
 		float min = 100000;
 
 		float drx,dry;
-		float drlen;
 
 		for(int i = 0; i < 100; i++){
 			float ar1 = (randFloat() - 0.5);
@@ -90,11 +83,8 @@ void render(Arm a){
 						+(ar1 + ar2)*cos(angles[2] + angles[1] + 3.14/2)
 						+(ar1 + ar2 + ar3)*cos(angles[2] + angles[1] + angles[0] + 3.14/2);
 
-			drlen = sqrt(pow(drx, 2) + pow(dry, 2));
-			drx = drx / drlen;
-			dry = dry / drlen;
+			float val = abs(vector2angle(drx, dry) - vector2angle(dx, dy));
 
-			float val = pow(drx - dx, 2) + pow(dry - dy, 2);
 			if(val < min){
 				min = val;
 				a1 = ar1;
@@ -128,7 +118,7 @@ void render(Arm a){
 		dir.setOrigin(0, 0.01);
 		dir.setPosition(a.getArmLocation().x, -a.getArmLocation().y);
 		dir.setFillColor(sf::Color::Red);
-		dir.setRotation(atan(abs(drx) / dry) * 180/3.14);
+		dir.setRotation(vector2angle(drx, dry) * 180/3.14);
 
 		sf::CircleShape target(0.05);
 		target.setOrigin(0.05, 0.05);
