@@ -197,6 +197,7 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	hand.setScale(0.005, 0.005);
 	hand.setPosition(getArmLocation().x, - getArmLocation().y);
 	hand.setRotation(- RAD2DEG * world -> GetBodyList() -> GetAngle());
+	hand.setColor(sf::Color(255, 255, 255, opacity));
 
 	square.setSize(sf::Vector2f(0.3, 0.3));
 	square.setOrigin(0.3 / 2, 0.3 / 2);
