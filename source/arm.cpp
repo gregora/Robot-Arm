@@ -2,6 +2,9 @@
 
 Arm::Arm(std::vector<float> lengths, float max_torque){
 
+	texture.loadFromFile("textures/hand.png");
+
+
 	this -> lengths = lengths;
 
 	b2Vec2 gravity(0.0f, -9.8f);
@@ -109,7 +112,7 @@ void Arm::applySpeeds(std::vector<float> speeds){
 	}
 }
 
-void Arm::getAngles(float* angles){
+void Arm::getAngles(float* angles) const{
 	b2RevoluteJoint* joint = (b2RevoluteJoint*) world -> GetJointList();
 
 	int i = lengths.size() - 1;
@@ -123,7 +126,7 @@ void Arm::getAngles(float* angles){
 	}
 }
 
-b2Vec2 Arm::getArmLocation(){
+b2Vec2 Arm::getArmLocation() const{
 	b2Body* arm = world -> GetBodyList();
 
 	b2Vec2 position = arm -> GetPosition();
@@ -155,7 +158,14 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 
 		float length;
-		if(i == lengths.size()){
+		if(i == 0){
+			length = lengths[lengths.size() - 1];
+			square.setSize(sf::Vector2f(0.1, length - 0.1));
+			square.setOrigin(0.1 / 2, length / 2 - 0.1);
+
+			square.setFillColor(sf::Color(100, 100, 100, opacity));
+
+		}else if(i == lengths.size()){
 			square.setSize(sf::Vector2f(0.1, 0.1));
 			square.setOrigin(0.1 / 2, 0.1 / 2);
 
@@ -175,30 +185,18 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		square.setRotation(-ang*RAD2DEG);
 
 		target.draw(square, states.transform*getTransform());
+		target.draw(circle, states.transform*getTransform());
 
 		body = body -> GetNext();
 		i++;
 	}
 
-	i=0;
-	body = world -> GetBodyList();
-	while(body != nullptr){
-
-		float x = body->GetPosition().x;
-		float y = body->GetPosition().y;
-		float ang = body->GetAngle();
-
-		float length;
-		if(i == lengths.size()){
-
-		}else{
-			length = lengths[lengths.size() - i - 1];
-			circle.setPosition(x + cos(ang + 3.14/2)*length/2, -(y + sin(ang + 3.14/2)*length/2));
-			target.draw(circle, states.transform*getTransform());
-		}
-		body = body -> GetNext();
-		i++;
-	}
+	sf::Sprite hand;
+	hand.setTexture(texture);
+	hand.setOrigin(25, 19);
+	hand.setScale(0.005, 0.005);
+	hand.setPosition(getArmLocation().x, - getArmLocation().y);
+	hand.setRotation(- RAD2DEG * world -> GetBodyList() -> GetAngle());
 
 	square.setSize(sf::Vector2f(0.3, 0.3));
 	square.setOrigin(0.3 / 2, 0.3 / 2);
@@ -207,6 +205,7 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 	target.draw(square, states.transform*getTransform());
 
+	target.draw(hand, states.transform*getTransform());
 }
 
 
