@@ -1,9 +1,7 @@
 #include "../include/arm.h"
 
-Arm::Arm(std::vector<float> lengths, float max_torque){
 
-	texture.loadFromFile("textures/hand.png");
-
+PhysicsArm::PhysicsArm(std::vector<float> lengths, float max_torque){
 
 	this -> lengths = lengths;
 
@@ -78,7 +76,12 @@ Arm::Arm(std::vector<float> lengths, float max_torque){
 
 }
 
-void Arm::physics(float delta, bool debug){
+Arm::Arm(std::vector<float> lengths, float max_torque) : PhysicsArm(lengths, max_torque){
+	texture.loadFromFile("textures/hand.png");
+
+}
+
+void PhysicsArm::physics(float delta, bool debug){
 
 	world -> Step(delta, 5, 5);
 
@@ -94,11 +97,14 @@ void Arm::physics(float delta, bool debug){
 
 }
 
-Arm::~Arm(){
+PhysicsArm::~PhysicsArm(){
 	delete world;
 }
 
-void Arm::applySpeeds(std::vector<float> speeds){
+Arm::~Arm(){}
+
+
+void PhysicsArm::applySpeeds(std::vector<float> speeds){
 	b2RevoluteJoint* joint = (b2RevoluteJoint*) world -> GetJointList();
 
 	int i = speeds.size() - 1;
@@ -112,7 +118,7 @@ void Arm::applySpeeds(std::vector<float> speeds){
 	}
 }
 
-void Arm::getAngles(float* angles) const{
+void PhysicsArm::getAngles(float* angles) const{
 	b2RevoluteJoint* joint = (b2RevoluteJoint*) world -> GetJointList();
 
 	int i = lengths.size() - 1;
@@ -126,7 +132,7 @@ void Arm::getAngles(float* angles) const{
 	}
 }
 
-b2Vec2 Arm::getArmLocation() const{
+b2Vec2 PhysicsArm::getArmLocation() const{
 	b2Body* arm = world -> GetBodyList();
 
 	b2Vec2 position = arm -> GetPosition();
