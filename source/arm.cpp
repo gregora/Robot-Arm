@@ -193,7 +193,7 @@ void Arm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 	sf::Sprite hand;
 	hand.setTexture(texture);
-	hand.setOrigin(25, 19);
+	hand.setOrigin(25, 15);
 	hand.setScale(0.005, 0.005);
 	hand.setPosition(getArmLocation().x, - getArmLocation().y);
 	hand.setRotation(- RAD2DEG * world -> GetBodyList() -> GetAngle());
